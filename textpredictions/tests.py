@@ -12,17 +12,14 @@ from django.test import Client
 
 
 def create_one_model():
-    folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
     filename = "obama_or_lincoln"
     (outcomes_train, outcome_varname, texts_train, text_varname,
-     parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True,
-                                                                      verbose=False)
-    text_model = text_model_functions.TextModel(outcomes_train, texts_train, parameters_display=parameters_display,
-                                                verbose=False)
+     parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True)
+    text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train, parameters_display=parameters_display)
 
     # Set performance using test sample
     (outcomes_test, outcomes_varname, texts_test, texts_varname,
-     parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=False)
+     parameters_display) = text_model_functions.text_model_parameters(filename=filename)
     text_model.set_performance(outcomes_test, texts_test)
 
     prediction_model = PredictionModel(outcome=outcome_varname,
@@ -34,7 +31,7 @@ def create_one_model():
 
 
 # Checking that the player works correctly
-class Test_Textprediction(TestCase):
+class TestTextprediction(TestCase):
     folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
 
     def setUp(self):
@@ -62,18 +59,15 @@ class Test_Textprediction(TestCase):
     def test_model_building(self):
         filenames = ["obama_or_lincoln"]  # "subjective_or_objective"
         for filename in filenames:
-            print "Testing creating model from file: %s" % (filename)
 
             (outcomes_train, outcome_varname, texts_train, text_varname,
-             parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=self.folder,
-                                                                              train=True, verbose=True)
-            text_model = text_model_functions.TextModel(outcomes_train, texts_train,
-                                                        parameters_display=parameters_display, verbose=True)
+             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True)
+            text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train,
+                                                        parameters_display=parameters_display)
 
             # Set performance using test sample
             (outcomes_test, outcomes_varname, texts_test, texts_varname,
-             parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=self.folder,
-                                                                              train=False)
+             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=False)
             text_model.set_performance(outcomes_test, texts_test)
 
             prediction_model = PredictionModel(outcome=outcome_varname,
@@ -138,18 +132,12 @@ class TestAjax(TestCase):
 
 class TestModel(unittest.TestCase):
     def setUp(self):
-        folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
         filename = "obama_or_lincoln"
         (outcomes_train, outcome_varname, texts_train, text_varname,
-         parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True, verbose=False)
+         parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True)
         self.outcomes = outcomes_train
         self.texts = texts_train
-        self.text_model = text_model_functions.TextModel(outcomes_train, texts_train, parameters_display={},
-                                                         verbose=False)
-        print("Named steps:")
-        for (k, v) in self.text_model.tm.pipe.named_steps.iteritems():
-            print "Step: %s | %s" % (k, v)
-
+        self.text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train, parameters_display)
 
     def test_std(self):
         self.assertTrue(len(self.text_model.std_X) > 0)
@@ -165,10 +153,11 @@ class TestModel(unittest.TestCase):
     def test_performance(self):
         tm = self.text_model
         tm.set_performance(self.outcomes, self.texts)
-        print self.text_model.get_texts_test_performance()
+        self.text_model.get_texts_test_performance()
 
     def test_summary(self):
-        print self.text_model.prediction_summary("McCain")
+        pass
+        #self.text_model.prediction_summary("McCain")
 
     def test_prediction(self):
         self.assertTrue(self.text_model.predict("McCain") > 0.55)
@@ -178,7 +167,7 @@ class TestHelperFunctions(unittest.TestCase):
         folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
         filename = "obama_or_lincoln"
         (outcomes_train, outcome_varname, texts_train, text_varname,
-         parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True, verbose=False)
+         parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True, verbose=False)
         self.assertEquals(parameters_display['model_name'], "Obama or Lincoln?")
 
 

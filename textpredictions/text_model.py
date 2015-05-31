@@ -204,7 +204,7 @@ class RidgeWithStats(Ridge):
         self.std_X = DataFrame(X.toarray()).std()
         return Ridge.fit(self, X, y, sample_weight)
 
-class TextModel:
+class TextModel(object):
     """This is the main class from this module. It allows you to build a
     text model given outcomes, texts, text modules used, and options."""
     pipe = None

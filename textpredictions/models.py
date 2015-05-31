@@ -20,15 +20,13 @@ class UploadFileForm(forms.Form):
 
 class PredictionModel(models.Model):
     model_name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000, null=True, blank=True)
-    universe = models.CharField(max_length=1000, null=True, blank=True)
     outcome = models.CharField(max_length=50)
     text_variable = models.CharField(max_length=50)
     data_name = models.CharField(max_length=50)
     text_model = PickledObjectField(null=True, blank=True, protocol=1)
 
     def most_important_features(self):
-        reg = text_model_functions.get_printable_dataframe(self.text_model.regression_table)[:200]
+        reg = text_model_functions.get_printable_dataframe(self.text_model.get_regression_table())[:200]
         return reg
 
     def parameters_display(self):
@@ -57,6 +55,3 @@ class TextEntryForm(ModelForm):
             'text': forms.Textarea(attrs={'rows': 10, 'cols': 50}),
         }
         fields = ['text']
-
-
-   

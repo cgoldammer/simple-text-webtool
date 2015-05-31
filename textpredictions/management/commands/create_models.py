@@ -17,15 +17,12 @@ class Command(NoArgsCommand):
             print "Testing creating model from file: %s" % (filename)
 
             (outcomes_train, outcome_varname, texts_train, text_varname,
-             parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=self.folder,
-                                                                              train=True, verbose=True)
-            text_model = text_model_functions.TextModel(outcomes_train, texts_train,
-                                                        parameters_display=parameters_display, verbose=True)
+             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True, verbose=True)
+            text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train,parameters_display)
 
             # Set performance using test sample
             (outcomes_test, outcomes_varname, texts_test, texts_varname,
-             parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=self.folder,
-                                                                              train=False)
+             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=False)
             text_model.set_performance(outcomes_test, texts_test)
 
             prediction_model = PredictionModel(outcome=outcome_varname,

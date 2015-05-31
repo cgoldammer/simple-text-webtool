@@ -8,12 +8,7 @@ def about(request):
 
 
 def enter_text(request, model_pk, text_entry_pk):
-    print "Going to text entry"
-    print text_entry_pk
-    print model_pk
     if text_entry_pk:
-        print "Model or text entry received"
-        # textEntry=TextEntry.objects.get(pk=text_entry_pk)
         model = PredictionModel.objects.get(pk=model_pk)
         text = model.text_model.texts_test_sample[int(text_entry_pk)]
         return render(request, 'textpredictions/enter_text.html', {'text': text, "model": model})
