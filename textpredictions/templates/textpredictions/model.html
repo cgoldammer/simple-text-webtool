@@ -1,0 +1,154 @@
+{% extends 'textpredictions/base.html' %}
+{% block title %} About {% endblock %}
+
+{% block body_block %}
+
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+<script> $( document ).ready(function() {
+		new Morris.Line({
+		    // ID of the element in which to draw the chart.
+		    element: 'performance_chart',
+		    data: [
+		    	{% for row in model.text_model.mean_outcome_in_groups %}
+					{decile:{{row.0}} ,mean:{{row.1}} },
+				{% endfor %}
+		    ],
+		    xkey: 'decile',
+		    ykeys: ['mean'],
+		    labels: ['Mean outcome'],
+		    parseTime: false,
+		    ymin: 'auto',
+		    hideHover: 'auto',
+		    //xLabelFormat: function(date) { return date; },
+		    yLabelFormat: function (y) { return (Math.round(y*100)/100).toString(); },
+		    hoverCallback: function (index, options, content) {
+		        var row = options.data[index];
+		        return "Decile "+row.decile +" has a mean outcome of "+ (Math.round(row.mean*100)/100) + ".";
+		    },
+		});
+  	});
+ 	</script>
+
+
+	<div class="container">
+		<div class="starter-template">
+			<h1>Model: {{model.parameters_display.model_name}}</h1>
+			<p class="lead">{{model.parameters_display.description}}</p>
+		</div>
+
+		<div class="row text-center">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Model overview
+							</h3>
+					</div>
+					<div class="panel-body">
+					<p class="text-center"> The outcome is: {{model.parameters_display.outcome_name}} </p>
+					{% if model.text_model.is_dummy_outcome %}
+						<p class="text-center">  This is a dummy that is true {% widthratio model.text_model.outcome_summary.mean 1 100 %}% of the time.
+					{% endif %}
+					<div class="row-fluid">
+						<div class="col-md-2"></div>
+						<div class="col-md-9">
+						<table class="table table-condensed">
+									<thead>
+										<tr>
+										<th class="text-center" colspan="2">Model statistics </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Share correctly predicted</th>
+											<td> {% widthratio  model.text_model.share_correct_print 1 100 %}%</td>
+										</tr>
+										<tr>
+											<td>Number of observations</th>
+											<td>{{ model.text_model.number_of_observations }}</td>
+										</tr>
+										<tr>
+											<td>Number of features</th>
+											<td>{{ model.text_model.number_of_features }}</td>
+										</tr>
+									</tbody>
+								</table>
+						</div>
+						<div class="col-md-2"></div>
+					</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-primary pagination-centered">
+					<div class="panel-heading">
+						<h3 class="panel-title">Model performance</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row-fluid" id="div_model_performance">
+							<p> This provides the average outcome per decile of predicted value, obtained from the
+							test sample. </p>
+							<div id="performance_chart" style="width: 400px; height: 250px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-md-6">
+					{% if model.text_model.get_texts_test_performance %}
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Example observations</h3>
+						</div>
+						<div class="panel-body">
+							<p>These observations are randomly drawn from the
+									test sample</p>
+							<table class="table table-condensed text-left">
+								<tr>
+									<th>Beginning of text</th>
+									<th>Predicted value</th>
+								</tr>
+								{% for row in model.text_model.get_texts_test_performance %}
+								<tr>
+									<td>
+<a
+										href="{% url 'textpredictions.views.enter_text' model_pk=model.pk text_entry_pk=row.2%}">
+											{{row.0|slice:":40"}}</a></td>
+									<td>{{ row.1|floatformat:3}}</td>
+								</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+				<div class="col-md-6">
+					{% if model.most_important_features %}
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Most important predictors</h3>
+						</div>
+						<p>The effect size is calculated as the coefficient multiplied by the standard deviation
+						of the dummy for presence of the word.</p>
+						<table class="table table-condensed text-left">
+							<tr>
+								<th>Word</th>
+								<th>Coefficient</th>
+								<th>Effect size</th>
+							</tr>
+							{% for row in model.most_important_features|slice:":40" %}
+							<tr>
+								<td>{{row.0}}</td>
+								<td>{{row.1}}</td>
+								<td>{{row.4}}</td>
+							</tr>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+{% endblock %}

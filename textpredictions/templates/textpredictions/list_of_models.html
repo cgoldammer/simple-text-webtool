@@ -1,0 +1,29 @@
+{% extends 'textpredictions/base.html' %}
+{% block title %} About {% endblock %}
+
+{% block body_block %}
+    <div class="page-header">
+		<h1 class="text-center">Models</h1>
+		<p class="lead text-center">Click on a model to use it...</p>
+	</div>
+
+		{% if models %}
+		<div class="row text-center">
+			{% for model in models %}
+			<div class="col-md-4">
+				<div class="panel panel-button panel-success"
+					onclick="window.location='{% url 'textpredictions.views.enter_text' model_pk=model.pk %}'">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{model.parameters_display.model_name }}</h3>
+					</div>
+					<div class="panel-body">
+						{{model.parameters_display.description}}</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p>No models are available.</p>
+		{% endif %}
+{% endblock %}
+

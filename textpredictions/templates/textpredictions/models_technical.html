@@ -1,0 +1,58 @@
+{% extends 'textpredictions/base.html' %}
+{% block title %} About {% endblock %}
+
+{% block body_block %}
+    <div class="page-header">
+		<h1 class="text-center">Technical details for the model</h1>
+		<p class="lead text-center">Click on a model and you'll get all
+			the detail you want...</p>
+	</div>
+
+		{% if models %} {% for model in models %}
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="panel panel-button panel-success"
+					onclick="window.location='{% url 'textpredictions.views.model' model_pk=model.pk %}'">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{model.parameters_display.model_name}}</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-6">
+								{{model.parameters_display.description}}</div>
+							<div class="col-md-offset-1 col-md-5">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+										<th colspan="2">Model statistics </th>
+										</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td>Share correctly predicted</th>
+										<td> {% widthratio  model.text_model.share_correct_print 1 100 %}%</td>
+									</tr>
+									<tr>
+										<td>Number of observations</th>
+										<td>{{ model.text_model.number_of_observations }}</td>
+									</tr>
+									<tr>
+										<td>Number of features</th>
+										<td>{{ model.text_model.number_of_features }}</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+
+		{% endfor %} {% else %}
+		<p>No models are available.</p>
+		{% endif %}
+{% endblock %}
+

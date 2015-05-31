@@ -1,0 +1,139 @@
+{% extends 'textpredictions/base.html' %}
+{% block title %} About {% endblock %}
+
+{% block body_block %}
+    <script>
+		var prediction_summ;
+		var model_id=-1;
+			function get_data(){
+				var text=document.getElementById("text").value;
+				Dajaxice.textpredictions.get_results(my_js_callback,{'text':text,'model_id':model_id});
+				return false;
+			}
+			function my_js_callback(data){
+				var para = document.getElementById("jsparagraph");
+				//console.log(data.message);
+
+				prediction_summ=data.prediction_summ;
+				//console.log("Summary:");
+				console.log(prediction_summ.important_features_good_and_bad);
+    			para.innerHTML=prediction_summ.predicted_value.toFixed(2);
+    			{% if model.text_model.is_dummy_outcome %}
+    				var val=(prediction_summ.predicted_value*100).toFixed(0);
+    				if (val<0) val=0;
+    				if (val>100) val=100;
+    				para.innerHTML=val+ "%";
+    			{% endif %}
+    			feat_good_text=prediction_summ.important_features_good_and_bad[0]
+    			feat_bad_text=prediction_summ.important_features_good_and_bad[1]
+    			console.log("Text for good:" +feat_good_text);
+    			document.getElementById("features_good").innerHTML=feat_good_text.join("<br>");
+    			document.getElementById("features_bad").innerHTML=feat_bad_text.join("<br>");
+    			//message;
+			}
+
+			function set_text(value){
+				console.log(value);
+				document.getElementById("text").value=value;
+				get_data();
+			}
+   $( document ).ready(function() {
+   		console.log("FFFFF")
+   		var submitKeys=[13,32,9,188,190,186];
+   		var currentVal = $("#id_model").value;
+   		var para = document.getElementById("jsparagraph");
+    	para.innerHTML='' ;
+    	model_field=$("#id_model");
+    	model_id = {{model.pk}};
+    	console.log("Initialized at model_id: "+model_id);
+    	console.log(model_field);
+    	get_data()
+		console.log("Text in form: {{form.text.value}}")
+	    $("#text").keyup(function(ev) {
+	    	//console.log("Text submitted | Model: " +model_id);
+	    	if (model_id==-1){
+	    		alert("Select a model!");
+	    	}
+		   if (jQuery.inArray(ev.which, submitKeys)>=0) {
+		      get_data();
+		   }
+		});
+{#		$("#id_model").on("change",function(ev) {#}
+{#		   	var currentVal = this.value;#}
+{#			model_id=currentVal;#}
+{#		});#}
+
+  });
+
+  </script>
+		<div class="page-header">
+			<h1 class="text-center">{{model.parameters_display.model_name}}
+			</h1>
+			<p class="lead text-center">{{model.parameters_display.description }}</p>
+		</div>
+		<div class="row"></div>
+		<div class="row">
+			<!-- 	<div class="col-md-3"> -->
+
+			<!-- 	</div> -->
+			<div class="col-md-8">
+				<div class="form-group">
+					<textarea id="text" class="form-highlighted form-control" rows="5"
+						placeholder="Write text here...">{{text}}</textarea>
+				</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-success ">
+					<div class="panel-heading">
+						<h3 class="panel-title text-center">{{model.parameters_display.prediction_name}}:</h3>
+					</div>
+					<div class="panel-body text-center form-normal ">
+						<p id="jsparagraph" class="result">X</p>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<div class="row">
+		<div class="col-md-8">
+			{% if model.parameters_display.example_texts %}
+				<div class="panel panel-danger">
+					<div class="panel-heading">
+						<h3 class="panel-title text-center">Try these</h3>
+					</div>
+					<div class="panel-body text-center form-normal">
+						{% for example in model.parameters_display.example_texts %}
+						<p>
+							<a onclick="set_text(this.innerHTML)">{{example}}</a>
+						</p>
+						{% endfor %}
+					</div>
+				</div>
+				{% endif %}
+		</div>
+		<div class="col-md-4">
+			<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title text-center">Increase</h3>
+							</div>
+							<div id="features_good" class="panel-body form-normal"></div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title text-center">Decrease</h3>
+							</div>
+							<div id="features_bad" class="panel-body form-normal"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+    </div>
+{% endblock %}

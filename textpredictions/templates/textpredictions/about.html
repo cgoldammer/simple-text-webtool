@@ -1,0 +1,47 @@
+{% extends 'textpredictions/base.html' %}
+{% block title %} About {% endblock %}
+
+{% block body_block %}
+    <div class="starter-template">
+
+        <h1>What is this?</h1>
+
+        <p class="lead">This is a simple dashboard that lets you use
+            predictive text models.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <p class="text-justify">
+                Predictive models with quantitative data are very popular: They can
+                find out what you'll buy, who you'll fall in love with, or when your milk
+                goes bad. But building predictive models from text seems hard.
+            </p>
+
+            <p class="text-justify">
+                Not true! At least, it's not true if you're willing to start simple. Here, I assume
+                that the most popular words in the text predict the outcome
+                (called <a href="http://en.wikipedia.org/wiki/Bag-of-words_model">bag-of-words</a>).
+            </p>
+
+            <p class="text-justify">
+                This results in a large number of flags. I then use a
+                <a href="http://en.wikipedia.org/wiki/Tikhonov_regularization">ridge regression </a>
+                (from the <a href=http://scikit-learn.org/stable/">scikit-learn package</a>) to predict the outcome.
+            </p>
+
+            <p class="text-justify">
+                I'm happy for any feedback. I'm currently working on adding the following:
+            <ul>
+                <li> Better data cleaning: Currently, the word "don't" is split into "don" and "t".
+                <li> Lemmatization: Currently, "likes" and "like" will be counted as the same word - I'll probably
+                    use <a href="http://textblob.readthedocs.org/en/dev/">textblob</a> to lemmatize the original text.
+                <li> Additional features: I'm planning to start by incorporating sentence structure and complexity.
+                <li> Additional models: Let me know if you have good data on blog comments. I would love to investigate
+                    <a href="http://en.wikipedia.org/wiki/Godwin's_law"> Godwin's law </a> empirically.
+            </ul>
+            </p>
+            <p> My thanks go to Ryan Wang who showed me how to estimate these models easily. Also, I use some of his
+                code! </p>
+            </div>
+    </div>
+{% endblock %}

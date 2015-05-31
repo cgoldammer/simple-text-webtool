@@ -1,0 +1,76 @@
+body {
+    padding-top: 50px;
+    background-color: rgb(245, 245, 245);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+p.result {
+    font-size: 80px;
+    text-align: center;
+}
+
+.form-highlighted {
+    background-color: white;
+    font-size: 35px;
+}
+
+.form-normal {
+    background-color: rgb(245, 245, 245)
+
+}
+
+.footer {
+    font-color: rgb(60, 60, 60);
+}
+
+.panel {
+    border-width: 3px;
+}
+
+.panel-button {
+    cursor: pointer;
+}
+
+
+
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+p.result {
+    font-size: 80px;
+    text-align: center;
+}
+
+.form-highlighted {
+    background-color: white;
+    font-size: 35px;
+}
+
+.form-normal {
+    background-color: rgb(245, 245, 245)
+
+}
+
+.footer {
+    font-color: rgb(60, 60, 60);
+}
+
+.panel {
+    border-width: 3px;
+}
+
+.panel-button {
+    cursor: pointer;
+}
+
+
