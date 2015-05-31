@@ -12,13 +12,13 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         PredictionModel.objects.all().delete()
-        filenames = ["obama_or_lincoln"]  # ,"movie_reviews","subjective_or_objective"
+        filenames = ["obama_or_lincoln"]  # , "movie_reviews","subjective_or_objective"]  # ,
         for filename in filenames:
             print "Testing creating model from file: %s" % (filename)
 
             (outcomes_train, outcome_varname, texts_train, text_varname,
-             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True, verbose=True)
-            text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train,parameters_display)
+             parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True)
+            text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train, parameters_display)
 
             # Set performance using test sample
             (outcomes_test, outcomes_varname, texts_test, texts_varname,

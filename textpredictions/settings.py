@@ -233,6 +233,5 @@ LOGGING = {
 
 LOCAL=False
 
-SOUTH_TESTS_MIGRATE = False
 
 

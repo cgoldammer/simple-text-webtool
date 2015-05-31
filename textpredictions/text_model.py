@@ -36,6 +36,7 @@ from sklearn.grid_search import GridSearchCV
 from nltk.stem import WordNetLemmatizer
 from textblob import TextBlob
 
+
 class RidgeWithStats(Ridge):
     def fit(self, X, y, sample_weight=1.0):
         self.std_X = DataFrame(X.toarray()).std()
@@ -45,11 +46,11 @@ class RidgeWithStats(Ridge):
 # Define a global dictionary with class subjects.
 def module_from_name(module):
     if module == "bag-of-words":
-        return ("bag-of-words", CountVectorizer())
+        return (module, CountVectorizer())
     if module == "emotions":
-        return ("emotions", EmotionFeaturizer())
+        return (module, EmotionFeaturizer())
     if module == "entities":
-        return ("entities", NamedEntityFeaturizer())
+        return (module, NamedEntityFeaturizer())
 
 
 def modules_to_dictionary(modules):
@@ -58,8 +59,6 @@ def modules_to_dictionary(modules):
     list (of module names and modules) and a dictionary of options."""
     modules_list = []
     options = {}
-    # isinstance. And transform into dictionary. Also use 'for' regardless
-    # of type
     if type(modules) == str:
         modules_list.append(module_from_name(modules))
     if type(modules) == list:
@@ -204,6 +203,7 @@ class RidgeWithStats(Ridge):
         self.std_X = DataFrame(X.toarray()).std()
         return Ridge.fit(self, X, y, sample_weight)
 
+
 class TextModel(object):
     """This is the main class from this module. It allows you to build a
     text model given outcomes, texts, text modules used, and options."""
@@ -314,7 +314,7 @@ class TextModel(object):
         if isinstance(texts, basestring):
             texts = [texts]
         predictions = self.pipe.predict(texts)
-        if (len(texts) == 1):
+        if len(texts) == 1:
             return predictions[0]
         return predictions
 

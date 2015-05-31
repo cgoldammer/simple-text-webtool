@@ -57,6 +57,8 @@ class TestTextprediction(TestCase):
             raise (ValueError, "Model text description not found!")
 
     def test_model_building(self):
+        """It's possible to build a `PredictionModel` from a file and then
+        access it on its own site"""
         filenames = ["obama_or_lincoln"]  # "subjective_or_objective"
         for filename in filenames:
 
@@ -107,19 +109,26 @@ class TestAjax(TestCase):
         """Creating the Obama or Lincoln model and saving it"""
         create_one_model()
 
-    """The Ajax calls works as expected"""
+
     url = "/dajaxice/textpredictions.get_results/"
 
     def test_results(self):
+        """Calling `get_results` returns both a predicted value
+        and features"""
         c = Client()
         prediction_model = PredictionModel.objects.all()[0]
         text = "McCain"
         content = {"text": text, "model_id": prediction_model.id}
+
+        # `get_results` is provided by Dajaxice. Dajaxice encodes
+        # the data, and we need to duplicate this encoding to get
+        # the test with sample data to work
         data = {"argv": json.dumps(content)}
         response = self.client.post(self.url,
                                     data=urllib.urlencode(data),
                                     content_type='application/x-www-form-urlencoded',
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        # The request went through
         self.assertEqual(response.status_code, 200)
 
         results = json.loads(response.content)
@@ -140,9 +149,11 @@ class TestModel(unittest.TestCase):
         self.text_model = text_model_functions.DisplayTextModel(outcomes_train, texts_train, parameters_display)
 
     def test_std(self):
+        """The standard deviations are stored"""
         self.assertTrue(len(self.text_model.std_X) > 0)
 
     def test_coef(self):
+        """The coefficients are displayed"""
         self.assertTrue(len(self.text_model.coef) > 0)
 
     def test_table(self):
@@ -156,18 +167,16 @@ class TestModel(unittest.TestCase):
         self.text_model.get_texts_test_performance()
 
     def test_summary(self):
-        pass
-        #self.text_model.prediction_summary("McCain")
+        self.text_model.prediction_summary("McCain")
 
     def test_prediction(self):
         self.assertTrue(self.text_model.predict("McCain") > 0.55)
 
 class TestHelperFunctions(unittest.TestCase):
     def test_parameters(self):
-        folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
         filename = "obama_or_lincoln"
         (outcomes_train, outcome_varname, texts_train, text_varname,
-         parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True, verbose=False)
+         parameters_display) = text_model_functions.text_model_parameters(filename=filename, train=True)
         self.assertEquals(parameters_display['model_name'], "Obama or Lincoln?")
 
 
