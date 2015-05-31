@@ -30,8 +30,7 @@ import re
 import nltk
 # This is required to make NLTK work with virtual environments.
 # Change the environment before using.
-nltk.data.path.append("/home/vagrant/nltk_data/")
-nltk.data.path.append("/root/nltk_data/")
+nltk.data.path.append("/var/www/textprediction/nltk_data/")
 import pickle
 from sklearn.grid_search import GridSearchCV
 from nltk.stem import WordNetLemmatizer

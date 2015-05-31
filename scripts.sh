@@ -88,7 +88,6 @@ reset_db () {
   PGPASSWORD=cg psql -Upostgres -c "drop database textprediction;"
   PGPASSWORD=cg psql -Upostgres -c "create database textprediction;"
   cd /var/www/textprediction
-  python -m textblob.download_corpora
   python manage.py makemigrations
   python manage.py migrate
 
@@ -122,4 +121,3 @@ python manage.py migrate
 python manage.py collectstatic --noinput --clear
 python manage.py create_models
 sudo service apache2 restart
-manage runserver 0.0.0.0:8000

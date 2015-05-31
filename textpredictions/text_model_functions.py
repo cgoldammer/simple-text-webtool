@@ -290,7 +290,7 @@ class TextModel:
 
     def get_features(self, text):
         """This takes a text and translates it into features. This function thus describes central logic of the TextModel"""
-        print self.tm.pipe
+        # print self.tm.pipe
         x = Pipeline(self.tm.pipe.steps[0:-1]).transform([text]).toarray()[0]
         print(x)
         print("X")
