@@ -12,6 +12,7 @@ from sklearn.linear_model import Ridge
 import nltk
 from textpredictions import text_model
 from nltk import word_tokenize
+import json
 
 
 def get_texts_sampled(texts, number):
@@ -109,66 +110,14 @@ def text_model_parameters(filename, folder, train=True, verbose=False):
     data_file_string = open(folder + filename + train_string + ".csv", "r").read()
     content = get_content(data_file_string)
 
-    outcome = None
-    text_variable = None
+    descriptions_filename = "textpredictions/static/textpredictions/descriptions.json"
+    descriptions = json.load(open(descriptions_filename, "r"))
+
+    display_parameters = descriptions[filename]
     data_original = content['data']
 
-    outcome_name = None
-    text_variable_name = None
-    example_texts = None
-    description = None
-    outcomes = None
-    images = None
-    known_phrases = None
-    prediction_name = None
-    image_note = None
-
-    if filename == "obama_or_lincoln":
-        model_name = "Obama or Lincoln?"
-        outcome = "is_obama"
-        outcome_name = "Is Obama"
-        prediction_name = "Probability that it's Obama"
-        outcomes = ["Lincoln", "Obama"]
-        images = ["lincoln", "obama"]
-        text_variable = "text"
-        text_variable_name = "Sentence said in a speech"
-        description = "This model uses speeches by Obama and Lincoln to identify who of the two spoke a sentence."
-        example_texts = [
-            "We the people are the rightful masters of both Congress and the courts, not to overthrow the Constitution but to overthrow the men who pervert the Constitution.",
-            "There is not a liberal America and a conservative America. There is the United States of America."]
-        known_phrases = [("Four score and seven years ago", 0)]
-
-    if filename == "movie_reviews":
-        model_name = "Is the movie good or bad?"
-        outcome = "is_positive"
-        outcome_name = "Is positive"
-        prediction_name = "Probability that the movie was positively reviewed"
-        text_variable = "text"
-        text_variable_name = "Sentence from movie review"
-        description = "This model combines single sentences from movie reviews with ratings (positive or negative) to predict whether a movie will be good."
-        example_texts = ["This movie was great! I loved the acting, especially by John Travolta.",
-                         "This was horrible. I just can't describe how disappointed I was that the plot was so shallow."]
-
-    if filename == "subjective_or_objective":
-        model_name = "Subjective or objective?"
-        outcome = "is_subjective"
-        outcome_name = "Is subjective"
-        prediction_name = "Probability that it this sentence was subjective (and not objective)"
-        text_variable = "text"
-        text_variable_name = "Sentence from a movie review or plot"
-        description = "This model uses single sentences from movie reviews (subjective) and movie plots (objective) to distinguish whether a sentence is subjective or objective."
-        example_texts = ["I liked it, it was very exciting!",
-                         "A petty thief is tired of the criminal life and decides to become - a towel! With disaster impending his life is hanging by a thread."]
-
-    display_parameters = {'model_name': model_name,
-                          'outcome_name': outcome_name,
-                          'prediction_name': prediction_name,
-                          'text_variable_name': text_variable_name,
-                          'example_texts': example_texts,
-                          'description': description,
-                          'outcomes': outcomes,
-                          'images': images,
-                          'known_phrases': known_phrases}
+    outcome = display_parameters['outcome']
+    text_variable = display_parameters['text_variable']
 
     if not outcome:
         raise (ValueError("No outcome set"))
@@ -192,10 +141,7 @@ def get_similarity(text_1, text_2):
     return (float(len(intersection)) / float(len(words_1)), float(len(intersection)) / float(len(words_2)))
 
 
-class RidgeWithStats(Ridge):
-    def fit(self, X, y, sample_weight=1.0):
-        self.std_X = DataFrame(X.toarray()).std()
-        return Ridge.fit(self, X, y, sample_weight)
+
 
 
 class TextModel:
@@ -203,7 +149,6 @@ class TextModel:
     test_sample_performance = None
     regression_table = None
     is_dummy_outcome = False
-    use_known_phrases = False
     number_of_observations = None
     number_of_features = None
 
@@ -275,15 +220,6 @@ class TextModel:
             i += 1
         texts_test_performance = sorted(texts_test_performance, key=itemgetter(1))
         return texts_test_performance
-
-    def adjust_probability(self, probability, text, known_phrases):
-        # For known phrases, shift probability into known direction by similarity
-
-        for (phrase, outcome) in known_phrases:
-            sim_1, sim_2 = get_similarity(text, phrase)
-            if sim_1 > .5 and sim_2 > .1:
-                probability += (sim_1 + sim_2) / 2 * (outcome * 2 - 1)
-        return probability
 
     def predict(self, texts):
         return self.tm.predict(texts)

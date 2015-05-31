@@ -199,6 +199,11 @@ class EmotionFeaturizer(BaseTransformer):
         return {}
 
 
+class RidgeWithStats(Ridge):
+    def fit(self, X, y, sample_weight=1.0):
+        self.std_X = DataFrame(X.toarray()).std()
+        return Ridge.fit(self, X, y, sample_weight)
+
 class TextModel:
     """This is the main class from this module. It allows you to build a
     text model given outcomes, texts, text modules used, and options."""

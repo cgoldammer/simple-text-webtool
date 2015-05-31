@@ -1,0 +1,53 @@
+{
+  "obama_or_lincoln": {
+    "model_name": "Obama or Lincoln?",
+    "outcome": "is_obama",
+    "outcome_name": "Is Obama",
+    "prediction_name": "Probability that it's Obama",
+    "outcomes": [
+      "Lincoln",
+      "Obama"
+    ],
+    "text_variable": "text",
+    "text_variable_name": "Sentence said in a speech",
+    "description": "This model uses speeches by Obama and Lincoln to identify who of the two spoke a sentence.",
+    "example_texts": [
+      "We the people are the rightful masters of both Congress and the courts, not to overthrow the Constitution but to overthrow the men who pervert the Constitution.",
+      "There is not a liberal America and a conservative America. There is the United States of America."
+    ]
+  },
+  "movie_reviews": {
+    "model_name": "Is the movie good or bad?",
+    "outcome": "is_positive",
+    "outcome_name": "Is positive",
+    "prediction_name": "Probability that the movie was positively reviewed",
+    "outcomes": [
+      "bad",
+      "good"
+    ],
+    "text_variable": "text",
+    "text_variable_name": "Sentence from movie review",
+    "description": "This model combines single sentences from movie reviews with ratings (positive or negative) to predict whether a movie will be good.",
+    "example_texts": [
+      "This movie was great! I loved the acting, especially by John Travolta.",
+      "This was horrible. I just can't describe how disappointed I was that the plot was so shallow."
+    ]
+  },
+  "subjective_or_objective": {
+    "model_name": "Subjective or objective?",
+    "outcome": "is_subjective",
+    "outcome_name": "Is subjective",
+    "prediction_name": "Probability that it this sentence was subjective (and not objective)",
+    "outcomes": [
+      "subjective",
+      "objective"
+    ],
+    "text_variable": "text",
+    "text_variable_name": "Sentence from a movie review or plot",
+    "description": "This model uses single sentences from movie reviews (subjective) and movie plots (objective) to distinguish whether a sentence is subjective or objective.",
+    "example_texts": [
+      "I liked it, it was very exciting!",
+      "A petty thief is tired of the criminal life and decides to become - a towel! With disaster impending his life is hanging by a thread."
+    ]
+  }
+}

@@ -47,10 +47,3 @@ class ModelView(generic.ListView):
         """Return all models."""
         return PredictionModel.objects.all()
 
-
-from django.shortcuts import render
-
-# import logging
-
-def index(request):
-    return render(request, 'libs/index.html', {})

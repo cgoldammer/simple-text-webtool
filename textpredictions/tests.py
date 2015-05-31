@@ -133,7 +133,7 @@ class TestAjax(TestCase):
         self.assertTrue(summ["predicted_value"] > 0.55)
 
         feats = summ['important_features_good_and_bad']
-        self.assertTrue('McCain' in feats[0][0])
+        self.assertTrue('mccain' in feats[0][0])
 
 
 class TestModel(unittest.TestCase):
@@ -141,8 +141,7 @@ class TestModel(unittest.TestCase):
         folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
         filename = "obama_or_lincoln"
         (outcomes_train, outcome_varname, texts_train, text_varname,
-         parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True,
-                                                                          verbose=False)
+         parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True, verbose=False)
         self.outcomes = outcomes_train
         self.texts = texts_train
         self.text_model = text_model_functions.TextModel(outcomes_train, texts_train, parameters_display={},
@@ -174,6 +173,13 @@ class TestModel(unittest.TestCase):
     def test_prediction(self):
         self.assertTrue(self.text_model.predict("McCain") > 0.55)
 
+class TestHelperFunctions(unittest.TestCase):
+    def test_parameters(self):
+        folder = os.path.join(settings.STATIC_ROOT, "textpredictions/")
+        filename = "obama_or_lincoln"
+        (outcomes_train, outcome_varname, texts_train, text_varname,
+         parameters_display) = text_model_functions.text_model_parameters(filename=filename, folder=folder, train=True, verbose=False)
+        self.assertEquals(parameters_display['model_name'], "Obama or Lincoln?")
 
 
 
