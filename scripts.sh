@@ -92,6 +92,7 @@ reset_db () {
   python manage.py migrate
 
   # Load the fixture into the database (not currently done). Will look something like
+  mkdir /var/www/textprediction/staticfiles/
   python manage.py collectstatic --noinput --clear
   python manage.py create_models
 

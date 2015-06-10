@@ -12,7 +12,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         PredictionModel.objects.all().delete()
-        filenames = ["obama_or_lincoln"]  # , "movie_reviews","subjective_or_objective"]  # ,
+        filenames = ["obama_or_lincoln", "subjective_or_objective"]  # , ]  # ,
         for filename in filenames:
             print "Testing creating model from file: %s" % (filename)
 

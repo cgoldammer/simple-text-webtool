@@ -16,6 +16,23 @@
       "There is not a liberal America and a conservative America. There is the United States of America."
     ]
   },
+  "hackernews": {
+    "model_name": "Hacker News",
+    "outcome": "log_points",
+    "outcome_name": "Log Points for comment",
+    "prediction_name": "Expected number of log points for comment",
+    "outcomes": [
+      "Low points",
+      "High points"
+    ],
+    "text_variable": "text",
+    "text_variable_name": "Sentence said in a speech",
+    "description": "This model uses speeches by Obama and Lincoln to identify who of the two spoke a sentence.",
+    "example_texts": [
+      "We the people are the rightful masters of both Congress and the courts, not to overthrow the Constitution but to overthrow the men who pervert the Constitution.",
+      "There is not a liberal America and a conservative America. There is the United States of America."
+    ]
+  },
   "movie_reviews": {
     "model_name": "Is the movie good or bad?",
     "outcome": "is_positive",
