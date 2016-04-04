@@ -38,9 +38,9 @@ from textblob import TextBlob
 
 
 class RidgeWithStats(Ridge):
-    def fit(self, X, y, sample_weight=1.0):
+    def fit(self, X, y):
         self.std_X = DataFrame(X.toarray()).std()
-        return Ridge.fit(self, X, y, sample_weight)
+        return Ridge.fit(self, X, y)
 
 
 # Define a global dictionary with class subjects.
@@ -199,9 +199,9 @@ class EmotionFeaturizer(BaseTransformer):
 
 
 class RidgeWithStats(Ridge):
-    def fit(self, X, y, sample_weight=1.0):
+    def fit(self, X, y):
         self.std_X = DataFrame(X.toarray()).std()
-        return Ridge.fit(self, X, y, sample_weight)
+        return Ridge.fit(self, X, y)
 
 
 class TextModel(object):
